@@ -12,7 +12,7 @@ setuptools.setup(
     description='Evaluation of mlflow binary classifiers',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/inloco/transaction-classifier',
+    url='https://github.com/hector-pinheiro/classifier-evaluation',
     packages=['classifier', 'util'],
     install_requires=required,
 )
