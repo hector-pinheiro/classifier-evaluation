@@ -6,8 +6,6 @@ with open("README.md", "r", encoding="utf-8") as fh:
 with open('requirements.txt') as f:
     required = f.read().splitlines()
 
-print(setuptools.find_packages(exclude=['test']))
-
 setuptools.setup(
     name='modeleval',
     version='0.0.1',
