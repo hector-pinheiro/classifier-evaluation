@@ -13,6 +13,6 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/hector-pinheiro/classifier-evaluation',
-    packages=['classifier', 'util'],
+    packages=setuptools.find_packages(exclude=['test']),
     install_requires=required,
 )
