@@ -31,6 +31,12 @@ class Model:
             self.inputs = json.loads(signature["inputs"])
             self.outputs = json.loads(signature["outputs"])
 
+    def get_model_name_version(self, model_string):
+        model_parts = model_string.split('.')
+        if len(model_parts) != 3:
+            return None, None
+        return model_parts[0] + '-' + model_parts[1], model_parts[2]
+
     def get_input_features_names(self):
         return [input['name'] for input in self.inputs]
 
@@ -39,24 +45,12 @@ class Model:
 
     def prediction(self, df):
         columns = df.columns
-
-        totals = df['total'].to_numpy()
-        os = df['os'].to_numpy()
-
         inputs_names = self.get_input_features_names()
-        outputs_names = self.get_outputs_names()
-
         signature_flag = True
         for i in inputs_names:
             if i not in columns:
                 signature_flag = False
-        for o in outputs_names:
-            if o not in columns:
-                signature_flag = False
-
         if signature_flag:
-            labels = df[[output for output in outputs_names]]
             features = df[[input for input in inputs_names]]
-            return self.model.predict(features), labels, totals, os
-
-        return None, None
+            return self.model.predict(features)
+        return None

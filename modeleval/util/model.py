@@ -1,4 +1,4 @@
-def get_features_and_labels(models):
+def get_features_and_labels_names(models):
     features = models[0].get_input_features_names()
     labels = models[0].get_outputs_names()
     for model in models[1:]:
@@ -9,8 +9,4 @@ def get_features_and_labels(models):
     return features, labels
 
 
-def get_model_name_version(model):
-    model_parts = model.split('.')
-    if len(model_parts) != 3:
-        return None, None
-    return model_parts[0] + '-' + model_parts[1], model_parts[2]
+
