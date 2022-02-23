@@ -71,6 +71,7 @@ def __roc_curve(ground_truth, scores, weights):
         "roc_fpr": roc_x,
         "roc_tpr": roc_y}
 
+
 def __get_value_if_list(data_list, index):
     if isinstance(data_list, list):
         value = data_list[index]
@@ -78,13 +79,13 @@ def __get_value_if_list(data_list, index):
         value = data_list
     return value
 
+
 def plot_roc_cuves(model_list,
                    data_list,
                    data_tag_list,
                    label_columns_list='label',
                    weight_columns_list=None,
                    curve_type='pos'):
-
     if curve_type == 'pos':
         __plot_base(
             "Receiver Operating Characteristic (ROC) Curve",
@@ -146,8 +147,5 @@ def plot_roc_cuves(model_list,
 
     rc = np.arange(min_point, 1.0005, 0.001)
     plt.plot(rc, rc, label="Random Classifier", c="darkgray", ls="--")
-
     plt.legend()
-    # plt.savefig(output_name, dpi=200)
-    # plt.clf()
     plt.show()

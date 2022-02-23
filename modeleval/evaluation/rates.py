@@ -45,10 +45,15 @@ def __find_threshold_index(rates, thrs, target_rate, mode):
     return valid_indxs[best_ind]
 
 
-def find_thresholds(model, data, label_column, target_values, value_type):
+def find_thresholds(model, data, label_column, target_values, value_type, weight_column=None):
     scores = model.prediction(data)
     labels = data[label_column].to_numpy()
-    fpr, tpr, thrs = roc_curve(labels, scores)
+    if weight_column is not None:
+        weights = data[weight_column].to_numpy()
+    else:
+        weights = np.ones(scores.shape, dtype='float32')
+
+    fpr, tpr, thrs = roc_curve(labels, scores, sample_weight=weights)
     if value_type == 'fpr':
         rates = fpr
         mode = 'min'
