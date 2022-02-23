@@ -92,7 +92,7 @@ def model_evaluation(scores, labels, weights, threshold, mode, model_tag='', dat
             neg_precision(scores, labels, weights, threshold)
         ]
     else:
-        raise NameError('Invalid evaluation mode (must be blocking or approval)')
+        raise NameError("Invalid evaluation mode (must be 'blocking' or 'approval')")
 
     return metrics, values
 
