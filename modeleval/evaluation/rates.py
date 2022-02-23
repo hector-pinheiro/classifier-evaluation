@@ -5,6 +5,36 @@ from sklearn.metrics import roc_curve
 from modeleval.evaluation.metrics import blocked_rate, tpr, fpr, precision, approved_rate, tnr, fnr, neg_precision
 
 
+def data_description(data, label_column, weight_column=None):
+    labels = data[label_column].to_numpy()
+    pos_samples = data.iloc[labels == 1.0]
+    neg_samples = data.iloc[labels == 0.0]
+
+    n_samples = len(data)
+    n_pos_samples = len(pos_samples)
+    n_neg_samples = len(neg_samples)
+
+    if weight_column is not None:
+        samples_weights = data[weight_column].to_numpy()
+        weights = np.sum(samples_weights)
+        pos_weights = np.sum(samples_weights[labels == 1.0])
+        neg_weights = np.sum(samples_weights[labels == 0.0])
+    else:
+        weights = float(n_samples)
+        pos_weights = float(n_pos_samples)
+        neg_weights = float(n_neg_samples)
+        weight_column = 'weights'
+
+    metrics = [['samples', n_samples],
+               ['pos-samples', n_pos_samples],
+               ['neg-samples', n_neg_samples],
+               [weight_column, weights],
+               ['pos-' + weight_column, pos_weights],
+               ['neg-' + weight_column, neg_weights]]
+
+    return pd.DataFrame(metrics, columns=['metric', 'value'])
+
+
 def __find_threshold_index(rates, thrs, target_rate, mode):
     valid_indxs = np.arange(0, rates.shape[0])[rates <= target_rate]
     valid_thrs = thrs[rates <= target_rate]
@@ -83,7 +113,7 @@ def compute_evaluation_rates(model, data, label_column, thresholds, mode='blocki
             weights,
             threshold,
             mode,
-            model.input_name,
+            model.get_tag(),
             data_tag
         )
         metrics.append(metrics_values)

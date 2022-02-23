@@ -7,7 +7,7 @@ from mlflow.tracking import MlflowClient
 
 
 class Model:
-    def __init__(self, input_model_name, tag=''):
+    def __init__(self, input_model_name, tag=None):
         model_name, version = self.get_model_name_version(input_model_name)
 
         self.input_name = input_model_name
@@ -30,6 +30,11 @@ class Model:
 
             self.inputs = json.loads(signature["inputs"])
             self.outputs = json.loads(signature["outputs"])
+
+    def get_tag(self):
+        if self.tag is not None:
+            return self.tag
+        return self.input_name
 
     def get_model_name_version(self, model_string):
         model_parts = model_string.split('.')
