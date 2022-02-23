@@ -7,7 +7,7 @@ import pandas as pd
 
 def process_data_types(dataset):
     for col in dataset.columns:
-        if dataset[col].dtype in [np.dtype('O').type, np.dtype('S').type]:
+        if pd.api.types.is_string_dtype(dataset[col].dtype):
             dataset[col] = pd.Series(dataset[col], dtype="category")
         else:
             dataset[col] = dataset[col].astype(ctypes.c_float)
