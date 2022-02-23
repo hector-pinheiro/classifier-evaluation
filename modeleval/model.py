@@ -7,7 +7,7 @@ from mlflow.tracking import MlflowClient
 
 
 class Model:
-    def __init__(self, input_model_name, tag):
+    def __init__(self, input_model_name, tag=''):
         model_name, version = self.get_model_name_version(input_model_name)
 
         self.input_name = input_model_name

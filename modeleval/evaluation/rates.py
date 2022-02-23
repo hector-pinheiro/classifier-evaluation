@@ -38,10 +38,12 @@ def find_thresholds(model, data, label_column, target_values, value_type):
     return thresholds, opt_rates
 
 
-def model_evaluation(scores, labels, weights, threshold, mode):
+def model_evaluation(scores, labels, weights, threshold, mode, model_tag='', data_tag=''):
     if mode == 'blocking':
-        metrics = ['threshold', 'blocked-rate', 'tpr/recall', 'fpr', 'precision']
+        metrics = ['model', 'data', 'threshold', 'blocked-rate', 'tpr/recall', 'fpr', 'precision']
         values = [
+            model_tag,
+            data_tag,
             threshold,
             blocked_rate(scores, weights, threshold),
             tpr(scores, labels, weights, threshold),
@@ -49,8 +51,10 @@ def model_evaluation(scores, labels, weights, threshold, mode):
             precision(scores, labels, weights, threshold)
         ]
     elif mode == 'approval':
-        metrics = ['threshold', 'approved-rate', 'tnr/specificity', 'fnr', 'neg-precision']
+        metrics = ['model', 'data', 'threshold', 'approved-rate', 'tnr/specificity', 'fnr', 'neg-precision']
         values = [
+            model_tag,
+            data_tag,
             threshold,
             approved_rate(scores, weights, threshold),
             tnr(scores, labels, weights, threshold),
@@ -63,7 +67,7 @@ def model_evaluation(scores, labels, weights, threshold, mode):
     return metrics, values
 
 
-def compute_evaluation_rates(model, data, label_column, thresholds, mode='blocking', weight_column=None):
+def compute_evaluation_rates(model, data, label_column, thresholds, mode='blocking', weight_column=None, data_tag=''):
     scores = model.prediction(data)
     labels = data[label_column].to_numpy()
     if weight_column is not None:
@@ -73,8 +77,15 @@ def compute_evaluation_rates(model, data, label_column, thresholds, mode='blocki
 
     metrics = []
     for threshold in thresholds:
-        metrics_names, metrics_values = model_evaluation(scores, labels, weights, threshold, mode)
+        metrics_names, metrics_values = model_evaluation(
+            scores,
+            labels,
+            weights,
+            threshold,
+            mode,
+            model.input_name,
+            data_tag
+        )
         metrics.append(metrics_values)
 
-    print(metrics)
     return pd.DataFrame(metrics, columns=metrics_names)
